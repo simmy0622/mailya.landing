@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mailya — 你的专属员工，在邮箱里上班</title>
+    <meta name="description" content="Mailya 是一名存在于邮箱里的 AI 员工。接收指令、执行任务、交付成果。">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-bg: #0a0a0a;
+            --color-bg-elevated: #141414;
+            --color-bg-card: #1a1a1a;
+            --color-text: #e8e6e3;
+            --color-text-muted: #888;
+            --color-text-dim: #555;
+            --color-accent: #4a5568;
+            --color-accent-light: #718096;
+            --color-highlight: #c9a959;
+            --color-border: #2a2a2a;
+            --font-serif: 'Noto Serif SC', Georgia, serif;
+            --font-sans: 'Noto Sans SC', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.8;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        /* Utility */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 140px 0;
+            position: relative;
+        }
+
+        .section--compact {
+            padding: 100px 0;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: var(--font-serif);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .headline {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 0.5em;
+        }
+
+        .subheadline {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            color: var(--color-text-muted);
+            font-weight: 300;
+            max-width: 600px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5em;
+        }
+
+        .section-title--small {
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--color-text-dim);
+            margin-bottom: 2em;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 0;
+            background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 100%);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-text);
+            text-decoration: none;
+        }
+
+        .nav-cta {
+            padding: 12px 28px;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-cta:hover {
+            background: var(--color-text);
+            color: var(--color-bg);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 100px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-tagline {
+            font-size: 1rem;
+            color: var(--color-highlight);
+            margin-bottom: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            margin: 2.5rem 0;
+            line-height: 2;
+        }
+
+        .hero-flow {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            color: var(--color-text-muted);
+        }
+
+        .flow-step span {
+            font-size: 1.5rem;
+        }
+
+        .flow-arrow {
+            color: var(--color-text-dim);
+            font-size: 1.25rem;
+        }
+
+        .hero-statement {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--color-text);
+            margin-top: 2rem;
+            font-style: italic;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 3.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn--primary {
+            background: var(--color-text);
+            color: var(--color-bg);
+            border: none;
+        }
+
+        .btn--primary:hover {
+            background: var(--color-highlight);
+            color: var(--color-bg);
+        }
+
+        .btn--secondary {
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn--secondary:hover {
+            border-color: var(--color-text);
+        }
+
+        /* Problem Section */
+        .problem {
+            background: var(--color-bg-elevated);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .problem-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .problem-list {
+            list-style: none;
+        }
+
+        .problem-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-size: 1.0625rem;
+        }
+
+        .problem-list li:last-child {
+            border-bottom: none;
+        }
+
+        .problem-answer {
+            font-family: var(--font-serif);
+        }
+
+        .problem-answer h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .problem-answer p {
+            color: var(--color-text-muted);
+            font-size: 1.0625rem;
+        }
+
+        /* What is Section */
+        .what-is .section-content {
+            max-width: 700px;
+        }
+
+        .what-is-statement {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .traits {
+            display: grid;
+            gap: 0;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .trait {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-size: 1.0625rem;
+        }
+
+        .what-is-footer {
+            margin-top: 3rem;
+            font-family: var(--font-serif);
+            font-size: 1.125rem;
+            color: var(--color-text);
+        }
+
+        /* Comparison */
+        .comparison {
+            background: var(--color-bg-elevated);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .comparison-table {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-cell {
+            padding: 1.5rem 1rem;
+            font-size: 1rem;
+        }
+
+        .comparison-cell--header {
+            font-weight: 500;
+            color: var(--color-text);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding-bottom: 2rem;
+        }
+
+        .comparison-cell--label {
+            color: var(--color-text-dim);
+        }
+
+        .comparison-cell--chatbot {
+            color: var(--color-text-muted);
+        }
+
+        .comparison-cell--mailya {
+            color: var(--color-highlight);
+        }
+
+        /* Capabilities */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            background: var(--color-border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 640px) {
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .capability {
+            background: var(--color-bg);
+            padding: 3rem 2.5rem;
+        }
+
+        .capability-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .capability h3 {
+            font-size: 1.125rem;
+            font-family: var(--font-sans);
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .capability p {
+            color: var(--color-text-muted);
+            font-size: 0.9375rem;
+        }
+
+        .capabilities-footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: var(--color-text-muted);
+            font-size: 1.0625rem;
+        }
+
+        .capabilities-footer strong {
+            color: var(--color-text);
+            font-weight: 400;
+        }
+
+        /* Identity Section */
+        .identity {
+            background: var(--color-bg-elevated);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .identity-content {
+            max-width: 700px;
+        }
+
+        .identity-equation {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 3rem 0;
+            padding: 2.5rem;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+        }
+
+        .identity-equation p {
+            color: var(--color-text-muted);
+            font-size: 1rem;
+        }
+
+        .identity-customization h3 {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-dim);
+            margin: 3rem 0 1.5rem;
+        }
+
+        .customization-item {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .customization-item:first-of-type {
+            border-top: 1px solid var(--color-border);
+        }
+
+        .customization-label {
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .customization-examples {
+            color: var(--color-text-dim);
+            font-size: 0.9375rem;
+        }
+
+        .identity-core {
+            margin-top: 3rem;
+            padding: 2rem;
+            border-left: 2px solid var(--color-highlight);
+        }
+
+        .identity-core p:first-child {
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .identity-core p:last-child {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--color-text);
+        }
+
+        /* How it works */
+        .how-it-works .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .how-it-works .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border);
+        }
+
+        .step-number {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            color: var(--color-text-dim);
+            margin-bottom: 1.5rem;
+        }
+
+        .step h3 {
+            font-family: var(--font-sans);
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .step p {
+            color: var(--color-text-muted);
+            font-size: 0.9375rem;
+        }
+
+        .how-footer {
+            text-align: center;
+            margin-top: 4rem;
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Pricing */
+        .pricing {
+            background: var(--color-bg-elevated);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .pricing-card {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+        }
+
+        .pricing-label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-amount {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-period {
+            color: var(--color-text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-features li {
+            padding: 0.875rem 0;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+        }
+
+        .pricing-features li:first-child {
+            border-top: 1px solid var(--color-border);
+        }
+
+        .pricing-footer {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            color: var(--color-text-dim);
+            font-size: 0.9375rem;
+        }
+
+        /* Value Statement */
+        .value-statement {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .value-statement p {
+            font-size: 1.25rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        .value-statement .highlight {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--color-text);
+            margin: 2rem 0;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: var(--color-bg-elevated);
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+            padding: 160px 0;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 2rem;
+        }
+
+        .final-cta p {
+            color: var(--color-text-muted);
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            line-height: 2;
+        }
+
+        .final-cta .btn {
+            padding: 20px 60px;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--color-text-dim);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+        .animate-delay-4 { animation-delay: 0.4s; }
+        .animate-delay-5 { animation-delay: 0.5s; }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">Mailya</a>
+            <a href="#pricing" class="nav-cta">立即订阅</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero section">
+        <div class="container">
+            <div class="hero-content">
+                <p class="hero-tagline animate">AI EMPLOYEE</p>
+                <h1 class="headline animate animate-delay-1">Mailya</h1>
+                <p class="subheadline animate animate-delay-2">你的专属员工，在邮箱里上班。</p>
+                
+                <p class="hero-description animate animate-delay-3">
+                    不是聊天。不是陪你想。<br>
+                    是接收指令 → 执行 → 交付成果。
+                </p>
+
+                <div class="hero-flow animate animate-delay-4">
+                    <div class="flow-step"><span>📩</span> 你发一封邮件</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step"><span>🧠</span> Ta 接受任务</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step"><span>📎</span> Ta 把结果发回来</div>
+                </div>
+
+                <p class="hero-statement animate animate-delay-5">像一名真正的员工那样。</p>
+
+                <div class="hero-ctas animate animate-delay-5">
+                    <a href="#pricing" class="btn btn--primary">立即订阅</a>
+                    <a href="#capabilities" class="btn btn--secondary">查看它能做什么</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem section">
+        <div class="container">
+            <p class="section-title--small reveal">为什么不是 Chatbot？</p>
+            <div class="problem-grid">
+                <div class="reveal">
+                    <h2 class="section-title">你不缺 AI<br>你缺的是能把事做完的人</h2>
+                    <ul class="problem-list">
+                        <li>和 ChatGPT 来回对话 20 轮</li>
+                        <li>想清楚问题本身就耗尽精力</li>
+                        <li>最后还是你自己整理、收尾、执行</li>
+                    </ul>
+                </div>
+                <div class="problem-answer reveal">
+                    <h3>Mailya 不讨论。<br>Mailya 交付。</h3>
+                    <p>它不问你"要不要考虑别的可能性"。<br>它默认你是老板。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What is Mailya -->
+    <section class="what-is section">
+        <div class="container">
+            <div class="section-content reveal">
+                <p class="section-title--small">Mailya 是什么？</p>
+                <p class="what-is-statement">
+                    Mailya 是一名存在于邮箱里的 AI 员工。
+                </p>
+                <div class="traits">
+                    <p class="trait">有固定邮箱</p>
+                    <p class="trait">有固定身份</p>
+                    <p class="trait">有稳定行为方式</p>
+                    <p class="trait">接到任务就执行</p>
+                    <p class="trait">执行完就汇报</p>
+                </div>
+                <p class="what-is-footer">不聊天、不跑题、不陪情绪。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison section--compact">
+        <div class="container">
+            <p class="section-title--small reveal" style="text-align: center;">它和普通 AI 的区别</p>
+            <div class="comparison-table reveal">
+                <div class="comparison-row">
+                    <div class="comparison-cell comparison-cell--header"></div>
+                    <div class="comparison-cell comparison-cell--header">普通 Chatbot</div>
+                    <div class="comparison-cell comparison-cell--header">Mailya</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell comparison-cell--label">关系</div>
+                    <div class="comparison-cell comparison-cell--chatbot">你来配合它</div>
+                    <div class="comparison-cell comparison-cell--mailya">它来配合你</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell comparison-cell--label">交互</div>
+                    <div class="comparison-cell comparison-cell--chatbot">多轮对话</div>
+                    <div class="comparison-cell comparison-cell--mailya">一次指令</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell comparison-cell--label">输出</div>
+                    <div class="comparison-cell comparison-cell--chatbot">给建议</div>
+                    <div class="comparison-cell comparison-cell--mailya">给结果</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell comparison-cell--label">定位</div>
+                    <div class="comparison-cell comparison-cell--chatbot">工具</div>
+                    <div class="comparison-cell comparison-cell--mailya">员工</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities -->
+    <section id="capabilities" class="section">
+        <div class="container">
+            <p class="section-title--small reveal">能力展示</p>
+            <h2 class="section-title reveal">Mailya 可以为你完成</h2>
+            
+            <div class="capabilities-grid reveal">
+                <div class="capability">
+                    <div class="capability-icon">📄</div>
+                    <h3>文档撰写</h3>
+                    <p>完整文档、方案、汇报稿</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">📊</div>
+                    <h3>文件输出</h3>
+                    <p>可直接使用的 PPT / Word / Excel</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">🧠</div>
+                    <h3>想法落地</h3>
+                    <p>把模糊想法变成可执行草案</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">🗂</div>
+                    <h3>整理归纳</h3>
+                    <p>会议纪要、计划表、任务清单</p>
+                </div>
+            </div>
+
+            <p class="capabilities-footer reveal">
+                你不用"引导它思考"。<strong>你只需要下达任务。</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- Identity Section -->
+    <section class="identity section">
+        <div class="container">
+            <div class="identity-content">
+                <p class="section-title--small reveal">拟人化核心</p>
+                <h2 class="section-title reveal">每一个 Mailya<br>都是独立的"人"</h2>
+                
+                <div class="identity-equation reveal">
+                    <p>一个订阅邮箱 → 对应一名员工</p>
+                    <p>一个身份 → 一种做事风格</p>
+                    <p>身份一旦确定，不可更改。除非你选择辞退（退订）。</p>
+                </div>
+
+                <p class="reveal" style="color: var(--color-text-muted); font-style: italic;">就像现实世界一样。</p>
+
+                <div class="identity-customization reveal">
+                    <h3>你可以决定</h3>
+                    <div class="customization-item">
+                        <p class="customization-label">它如何称呼你</p>
+                        <p class="customization-examples">陈书记 / 周总 / 李老板 / 杨总监</p>
+                    </div>
+                    <div class="customization-item">
+                        <p class="customization-label">它的工作态度</p>
+                        <p class="customization-examples">干脆直接 / 强执行、不废话</p>
+                    </div>
+                    <div class="customization-item">
+                        <p class="customization-label">它的表达气质</p>
+                        <p class="customization-examples">冷静 / 克制 / 略带锋芒</p>
+                    </div>
+                </div>
+
+                <div class="identity-core reveal">
+                    <p>但它永远记得一件事：</p>
+                    <p>老板的任务，必须完成。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-it-works section">
+        <div class="container">
+            <p class="section-title--small reveal" style="text-align: center;">使用方式</p>
+            <h2 class="section-title reveal" style="text-align: center;">三步开始</h2>
+            
+            <div class="steps reveal">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>订阅 Mailya</h3>
+                    <p>选择你的专属员工</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>获得专属邮箱</h3>
+                    <p>你的员工已就位</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>发邮件，交代工作</h3>
+                    <p>剩下的事，不用你操心</p>
+                </div>
+            </div>
+
+            <p class="how-footer reveal">剩下的事，不用你操心。</p>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing section">
+        <div class="container">
+            <p class="section-title--small reveal">定价</p>
+            <h2 class="section-title reveal">一名真正干活的员工</h2>
+            
+            <div class="pricing-card reveal">
+                <p class="pricing-label">月度订阅</p>
+                <p class="pricing-amount">¥24</p>
+                <p class="pricing-period">/ 月</p>
+                
+                <ul class="pricing-features">
+                    <li>一个专属员工邮箱</li>
+                    <li>无限工作邮件</li>
+                    <li>永久身份绑定</li>
+                    <li>结果导向交付</li>
+                </ul>
+                
+                <a href="#" class="btn btn--primary" style="width: 100%;">订阅我的 Mailya</a>
+                
+                <div class="pricing-footer">
+                    <span>没有 token 焦虑</span>
+                    <span>没有聊天次数限制</span>
+                    <span>没有"你再详细说说"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Statement -->
+    <section class="section">
+        <div class="container">
+            <div class="value-statement reveal">
+                <p>你不是不努力。<br>你只是每天要同时当老板、员工和助理。</p>
+                <p class="highlight">Mailya 只做一件事：<br>把你从执行里解放出来。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container reveal">
+            <h2>雇一个 AI 员工吧。</h2>
+            <p>不是工具。不是助手。<br>是一名会把事做完的人。</p>
+            <a href="#pricing" class="btn btn--primary">订阅我的 Mailya</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2025 Mailya. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll Animation Script -->
+    <script>
+        // Reveal on scroll
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', reveal);
+        window.addEventListener('load', reveal);
+    </script>
+
+</body>
+</html>
