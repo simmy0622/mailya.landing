@@ -787,21 +787,38 @@
         .animate-delay-4 { animation-delay: 0.4s; }
         .animate-delay-5 { animation-delay: 0.5s; }
 
-        /* Scroll animations - default visible, animate on scroll */
+        /* Scroll reveal animations */
         .reveal {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .reveal.animate-ready {
             opacity: 0;
-            transform: translateY(40px);
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Staggered delays for children */
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Fallback: show content if JS fails after 3s */
+        @keyframes fallbackReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .reveal {
+            animation: fallbackReveal 0s ease 3s forwards;
+        }
+        
+        .reveal.active {
+            animation: none;
         }
     </style>
 </head>
@@ -1010,7 +1027,7 @@
                 <div class="step">
                     <div class="step-number">2</div>
                     <h3>发邮件给 Mailya</h3>
-                    <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0d606c6461746c4d606c6461746c236c7e646c">[email&#160;protected]</a></p>
+                    <p>mailya&#64;mailya.asia</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
@@ -1063,7 +1080,7 @@
             <div class="modal-notice">
                 <p>⚠️ <strong>重要：支付时请在「备注」栏填写您的邮箱！</strong></p>
                 <p>⏰ 支付后 <strong>24 小时内</strong> 开通服务</p>
-                <p>📧 开通后发邮件至 <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0d606c6461746c4d606c6461746c236c7e646c">[email&#160;protected]</a></strong> 即可使用</p>
+                <p>📧 开通后发邮件至 <strong>mailya&#64;mailya.asia</strong> 即可使用</p>
             </div>
         </div>
     </div>
@@ -1101,23 +1118,36 @@
 
     <!-- Scroll Animation Script -->
     <script>
-        // Reveal on scroll
-        function reveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            
-            reveals.forEach(element => {
-                const windowHeight = window.innerHeight;
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 100;
+        // Reveal on scroll - more robust version
+        (function() {
+            function reveal() {
+                var reveals = document.querySelectorAll('.reveal');
                 
-                if (elementTop < windowHeight - elementVisible) {
-                    element.classList.add('active');
+                for (var i = 0; i < reveals.length; i++) {
+                    var windowHeight = window.innerHeight;
+                    var elementTop = reveals[i].getBoundingClientRect().top;
+                    var elementVisible = 150;
+                    
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveals[i].classList.add('active');
+                    }
                 }
-            });
-        }
+            }
 
-        window.addEventListener('scroll', reveal);
-        window.addEventListener('load', reveal);
+            // Run on scroll
+            window.addEventListener('scroll', reveal);
+            
+            // Run on load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', reveal);
+            } else {
+                reveal();
+            }
+            
+            // Also run after a short delay to ensure everything is loaded
+            setTimeout(reveal, 100);
+            setTimeout(reveal, 500);
+        })();
 
         // Payment Modal
         function openPayModal() {
