@@ -424,6 +424,95 @@
             border-bottom: 1px solid var(--color-border);
         }
 
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            padding: 3rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--color-text);
+        }
+
+        .modal-content h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .qr-code {
+            width: 240px;
+            height: 240px;
+            object-fit: contain;
+            margin: 0 auto 1.5rem;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .modal-notice {
+            background: var(--color-bg);
+            padding: 1.25rem;
+            border: 1px solid var(--color-border);
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            line-height: 1.8;
+        }
+
+        .modal-notice strong {
+            color: var(--color-highlight);
+        }
+
+        .modal-notice p:first-child {
+            color: #ff6b6b;
+            font-weight: 500;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--color-border);
+        }
+
+        .modal-notice p:first-child strong {
+            color: #ff6b6b;
+        }
+
         .identity-content {
             max-width: 700px;
         }
@@ -698,7 +787,7 @@
     <nav>
         <div class="container">
             <a href="#" class="logo">Mailya</a>
-            <a href="#pricing" class="nav-cta">立即订阅</a>
+            <button onclick="openPayModal()" class="nav-cta">立即订阅</button>
         </div>
     </nav>
 
@@ -726,7 +815,7 @@
                 <p class="hero-statement animate animate-delay-5">像一名真正的员工那样。</p>
 
                 <div class="hero-ctas animate animate-delay-5">
-                    <a href="#pricing" class="btn btn--primary">立即订阅</a>
+                    <button onclick="openPayModal()" class="btn btn--primary">立即订阅</button>
                     <a href="#capabilities" class="btn btn--secondary">查看它能做什么</a>
                 </div>
             </div>
@@ -763,11 +852,11 @@
                     Mailya 是一名存在于邮箱里的 AI 员工。
                 </p>
                 <div class="traits">
-                    <p class="trait">有固定邮箱</p>
-                    <p class="trait">有固定身份</p>
-                    <p class="trait">有稳定行为方式</p>
+                    <p class="trait">能读取你发的任何附件</p>
+                    <p class="trait">能直接输出 Word / PPT / Excel / PDF</p>
+                    <p class="trait">能联网搜索最新信息</p>
                     <p class="trait">接到任务就执行</p>
-                    <p class="trait">执行完就汇报</p>
+                    <p class="trait">执行完就交付</p>
                 </div>
                 <p class="what-is-footer">不聊天、不跑题、不陪情绪。</p>
             </div>
@@ -816,24 +905,24 @@
             
             <div class="capabilities-grid reveal">
                 <div class="capability">
-                    <div class="capability-icon">📄</div>
-                    <h3>文档撰写</h3>
-                    <p>完整文档、方案、汇报稿</p>
+                    <div class="capability-icon">📎</div>
+                    <h3>直接读取附件</h3>
+                    <p>Word / PDF / Excel / 图片，发过来就能读</p>
                 </div>
                 <div class="capability">
-                    <div class="capability-icon">📊</div>
-                    <h3>文件输出</h3>
-                    <p>可直接使用的 PPT / Word / Excel</p>
+                    <div class="capability-icon">📄</div>
+                    <h3>一步到位输出</h3>
+                    <p>直接生成 Word / PPT / Excel / PDF 文件</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">🔍</div>
+                    <h3>联网实时搜索</h3>
+                    <p>查汇率、查新闻、查数据，结果直接整合</p>
                 </div>
                 <div class="capability">
                     <div class="capability-icon">🧠</div>
-                    <h3>想法落地</h3>
-                    <p>把模糊想法变成可执行草案</p>
-                </div>
-                <div class="capability">
-                    <div class="capability-icon">🗂</div>
-                    <h3>整理归纳</h3>
-                    <p>会议纪要、计划表、任务清单</p>
+                    <h3>记忆上下文</h3>
+                    <p>记住你之前说过的，不用每次重复</p>
                 </div>
             </div>
 
@@ -843,40 +932,40 @@
         </div>
     </section>
 
-    <!-- Identity Section -->
+    <!-- Memory Section -->
     <section class="identity section">
         <div class="container">
             <div class="identity-content">
-                <p class="section-title--small reveal">拟人化核心</p>
-                <h2 class="section-title reveal">每一个 Mailya<br>都是独立的"人"</h2>
+                <p class="section-title--small reveal">核心能力</p>
+                <h2 class="section-title reveal">对话记忆<br>它记得你说过的每一句话</h2>
                 
                 <div class="identity-equation reveal">
-                    <p>一个订阅邮箱 → 对应一名员工</p>
-                    <p>一个身份 → 一种做事风格</p>
-                    <p>身份一旦确定，不可更改。除非你选择辞退（退订）。</p>
+                    <p>📧 所有邮件往来 → 自动存储记忆</p>
+                    <p>🧠 上次的任务背景 → 下次自动关联</p>
+                    <p>📎 你发过的附件 → 它都记得内容</p>
                 </div>
 
-                <p class="reveal" style="color: var(--color-text-muted); font-style: italic;">就像现实世界一样。</p>
+                <p class="reveal" style="color: var(--color-text-muted); font-style: italic;">不用每次都从头解释。</p>
 
                 <div class="identity-customization reveal">
-                    <h3>你可以决定</h3>
+                    <h3>比如你可以说</h3>
                     <div class="customization-item">
-                        <p class="customization-label">它如何称呼你</p>
-                        <p class="customization-examples">陈书记 / 周总 / 李老板 / 杨总监</p>
+                        <p class="customization-label">"上次那个方案，再改一版"</p>
+                        <p class="customization-examples">它知道你说的是哪个方案</p>
                     </div>
                     <div class="customization-item">
-                        <p class="customization-label">它的工作态度</p>
-                        <p class="customization-examples">干脆直接 / 强执行、不废话</p>
+                        <p class="customization-label">"按照之前的风格写"</p>
+                        <p class="customization-examples">它记得你喜欢的表达方式</p>
                     </div>
                     <div class="customization-item">
-                        <p class="customization-label">它的表达气质</p>
-                        <p class="customization-examples">冷静 / 克制 / 略带锋芒</p>
+                        <p class="customization-label">"继续昨天的报告"</p>
+                        <p class="customization-examples">它能无缝衔接</p>
                     </div>
                 </div>
 
                 <div class="identity-core reveal">
-                    <p>但它永远记得一件事：</p>
-                    <p>老板的任务，必须完成。</p>
+                    <p>越用越懂你。</p>
+                    <p>像一个真正的老员工。</p>
                 </div>
             </div>
         </div>
@@ -892,17 +981,17 @@
                 <div class="step">
                     <div class="step-number">1</div>
                     <h3>订阅 Mailya</h3>
-                    <p>选择你的专属员工</p>
+                    <p>支付后 24 小时内开通</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>获得专属邮箱</h3>
-                    <p>你的员工已就位</p>
+                    <h3>发邮件给 Mailya</h3>
+                    <p>mailya@mailya.asia</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>发邮件，交代工作</h3>
-                    <p>剩下的事，不用你操心</p>
+                    <h3>收到工作成果</h3>
+                    <p>Word / PPT / Excel / PDF</p>
                 </div>
             </div>
 
@@ -917,18 +1006,19 @@
             <h2 class="section-title reveal">一名真正干活的员工</h2>
             
             <div class="pricing-card reveal">
-                <p class="pricing-label">月度订阅</p>
-                <p class="pricing-amount">¥24</p>
+                <p class="pricing-label">正式员工计划</p>
+                <p class="pricing-amount">¥36</p>
                 <p class="pricing-period">/ 月</p>
                 
                 <ul class="pricing-features">
-                    <li>一个专属员工邮箱</li>
                     <li>无限工作邮件</li>
-                    <li>永久身份绑定</li>
-                    <li>结果导向交付</li>
+                    <li>直接读取 Word / PDF / Excel / 图片</li>
+                    <li>直接输出 Word / PPT / Excel / PDF</li>
+                    <li>联网实时搜索</li>
+                    <li>对话记忆功能</li>
                 </ul>
                 
-                <a href="#" class="btn btn--primary" style="width: 100%;">订阅我的 Mailya</a>
+                <button onclick="openPayModal()" class="btn btn--primary" style="width: 100%;">订阅 Mailya</button>
                 
                 <div class="pricing-footer">
                     <span>没有 token 焦虑</span>
@@ -938,6 +1028,21 @@
             </div>
         </div>
     </section>
+
+    <!-- Payment Modal -->
+    <div id="payModal" class="modal" onclick="closePayModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closePayModal()">&times;</span>
+            <h3>正式员工计划</h3>
+            <p class="modal-subtitle">¥36/月 · 支付宝扫一扫</p>
+            <img src="alipay-qr.jpg" alt="支付宝付款码" class="qr-code">
+            <div class="modal-notice">
+                <p>⚠️ <strong>重要：支付时请在「备注」栏填写您的邮箱！</strong></p>
+                <p>⏰ 支付后 <strong>24 小时内</strong> 开通服务</p>
+                <p>📧 开通后发邮件至 <strong>mailya@mailya.asia</strong> 即可使用</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Value Statement -->
     <section class="section">
@@ -954,7 +1059,7 @@
         <div class="container reveal">
             <h2>雇一个 AI 员工吧。</h2>
             <p>不是工具。不是助手。<br>是一名会把事做完的人。</p>
-            <a href="#pricing" class="btn btn--primary">订阅我的 Mailya</a>
+            <button onclick="openPayModal()" class="btn btn--primary">订阅 Mailya</button>
         </div>
     </section>
 
@@ -984,6 +1089,26 @@
 
         window.addEventListener('scroll', reveal);
         window.addEventListener('load', reveal);
+
+        // Payment Modal
+        function openPayModal() {
+            document.getElementById('payModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePayModal(event) {
+            if (!event || event.target.id === 'payModal' || event.target.classList.contains('modal-close')) {
+                document.getElementById('payModal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePayModal();
+            }
+        });
     </script>
 
 </body>
