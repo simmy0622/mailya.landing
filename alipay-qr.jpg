@@ -1,0 +1,5 @@
+cd your-repo-folder
+# 把 alipay-qr.jpg 复制到仓库根目录
+git add alipay-qr.jpg
+git commit -m "Add Alipay QR code"
+git push
