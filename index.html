@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mailya — 你的专属员工，在邮箱里上班</title>
-    <meta name="description" content="Mailya 是一名存在于邮箱里的 AI 员工。接收指令、执行任务、交付成果。">
+    <meta name="description" content="Mailya 是下一代 AI Agent 员工。发一封邮件，交代任务，坐等成果。">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -634,12 +634,58 @@
             text-align: center;
         }
 
-        .pricing-card {
-            max-width: 480px;
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 4rem 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pricing-card {
+            padding: 3rem 2.5rem;
             background: var(--color-bg);
             border: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        .pricing-card--pro {
+            border-color: var(--color-highlight);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-highlight);
+            color: var(--color-bg);
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .pricing-plan-name {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-plan-name--intern {
+            color: var(--color-text-muted);
+        }
+
+        .pricing-plan-name--pro {
+            color: var(--color-highlight);
         }
 
         .pricing-label {
@@ -652,26 +698,27 @@
 
         .pricing-amount {
             font-family: var(--font-serif);
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
         .pricing-period {
             color: var(--color-text-muted);
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .pricing-features {
             list-style: none;
             text-align: left;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .pricing-features li {
-            padding: 0.875rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px solid var(--color-border);
             color: var(--color-text-muted);
+            font-size: 0.9375rem;
         }
 
         .pricing-features li:first-child {
@@ -679,12 +726,12 @@
         }
 
         .pricing-footer {
-            margin-top: 3rem;
+            margin-top: 2rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
             color: var(--color-text-dim);
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
         }
 
         /* Value Statement */
@@ -828,7 +875,7 @@
     <nav>
         <div class="container">
             <a href="#" class="logo">Mailya</a>
-            <button onclick="openPayModal()" class="nav-cta">立即订阅</button>
+            <a href="#pricing" class="nav-cta">查看定价</a>
         </div>
     </nav>
 
@@ -856,7 +903,7 @@
                 <p class="hero-statement animate animate-delay-5">像一名真正的员工那样。</p>
 
                 <div class="hero-ctas animate animate-delay-5">
-                    <button onclick="openPayModal()" class="btn btn--primary">立即订阅</button>
+                    <a href="#pricing" class="btn btn--primary">查看定价</a>
                     <a href="#capabilities" class="btn btn--secondary">查看它能做什么</a>
                 </div>
             </div>
@@ -890,7 +937,8 @@
             <div class="section-content reveal">
                 <p class="section-title--small">Mailya 是什么？</p>
                 <p class="what-is-statement">
-                    Mailya 是一名存在于邮箱里的 AI 员工。
+                    邮件，是你和员工交代任务的窗口。<br>
+                    <span style="color: var(--color-highlight);">Mailya 是下一代 AI Agent 员工。</span>
                 </p>
                 <div class="traits">
                     <p class="trait">能读取你发的任何附件</p>
@@ -899,7 +947,7 @@
                     <p class="trait">接到任务就执行</p>
                     <p class="trait">执行完就交付</p>
                 </div>
-                <p class="what-is-footer">不聊天、不跑题、不陪情绪。</p>
+                <p class="what-is-footer">发一封邮件，交代任务，坐等成果。</p>
             </div>
         </div>
     </section>
@@ -1044,38 +1092,79 @@
     <section id="pricing" class="pricing section">
         <div class="container">
             <p class="section-title--small reveal">定价</p>
-            <h2 class="section-title reveal">一名真正干活的员工</h2>
+            <h2 class="section-title reveal">选择适合你的计划</h2>
             
-            <div class="pricing-card reveal">
-                <p class="pricing-label">正式员工计划</p>
-                <p class="pricing-amount">¥42</p>
-                <p class="pricing-period">/ 月</p>
+            <div class="pricing-grid reveal">
+                <!-- 实习生计划 -->
+                <div class="pricing-card pricing-card--intern">
+                    <p class="pricing-plan-name pricing-plan-name--intern">实习生计划</p>
+                    <p class="pricing-amount">¥9.9</p>
+                    <p class="pricing-period">/ 月</p>
+                    
+                    <ul class="pricing-features">
+                        <li>每日 8,000 tokens 额度</li>
+                        <li>直接读取 Word / PDF / Excel / 图片</li>
+                        <li>直接输出 Word 文档</li>
+                        <li>联网实时搜索</li>
+                        <li>对话记忆功能</li>
+                    </ul>
+                    
+                    <button onclick="openPayModal('intern')" class="btn btn--secondary" style="width: 100%;">订阅实习生</button>
+                    
+                    <div class="pricing-footer">
+                        <span>适合轻度使用</span>
+                        <span>基础文字工作</span>
+                    </div>
+                </div>
                 
-                <ul class="pricing-features">
-                    <li>无限工作邮件</li>
-                    <li>直接读取 Word / PDF / Excel / 图片</li>
-                    <li>直接输出 Word / PPT / Excel / PDF</li>
-                    <li>联网实时搜索</li>
-                    <li>对话记忆功能</li>
-                </ul>
-                
-                <button onclick="openPayModal()" class="btn btn--primary" style="width: 100%;">订阅 Mailya</button>
-                
-                <div class="pricing-footer">
-                    <span>没有 token 焦虑</span>
-                    <span>没有聊天次数限制</span>
-                    <span>没有"你再详细说说"</span>
+                <!-- 正式员工计划 -->
+                <div class="pricing-card pricing-card--pro">
+                    <div class="pricing-badge">推荐</div>
+                    <p class="pricing-plan-name pricing-plan-name--pro">正式员工计划</p>
+                    <p class="pricing-amount">¥49.9</p>
+                    <p class="pricing-period">/ 月</p>
+                    
+                    <ul class="pricing-features">
+                        <li>每日 50,000 tokens 额度</li>
+                        <li>直接读取 Word / PDF / Excel / 图片</li>
+                        <li>直接输出 Word / PPT / Excel / PDF</li>
+                        <li>联网实时搜索</li>
+                        <li>对话记忆功能</li>
+                        <li>更强推理能力 (DeepSeek Reasoner)</li>
+                    </ul>
+                    
+                    <button onclick="openPayModal('pro')" class="btn btn--primary" style="width: 100%;">订阅正式员工</button>
+                    
+                    <div class="pricing-footer">
+                        <span>完整文件生成能力</span>
+                        <span>更高额度更强模型</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Payment Modal -->
-    <div id="payModal" class="modal" onclick="closePayModal(event)">
+    <!-- Payment Modal - Intern -->
+    <div id="payModalIntern" class="modal" onclick="closePayModal('intern', event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close" onclick="closePayModal()">&times;</span>
+            <span class="modal-close" onclick="closePayModal('intern')">&times;</span>
+            <h3>实习生计划</h3>
+            <p class="modal-subtitle">¥9.9/月 · 支付宝扫一扫</p>
+            <img src="alipay-qr-intern.jpg" alt="支付宝付款码" class="qr-code">
+            <div class="modal-notice">
+                <p>⚠️ <strong>重要：支付时请在「备注」栏填写您的邮箱！</strong></p>
+                <p>⏰ 支付后 <strong>24 小时内</strong> 开通服务</p>
+                <p>📧 开通后发邮件至 <strong>mailya&#64;mailya.asia</strong> 即可使用</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal - Pro -->
+    <div id="payModal" class="modal" onclick="closePayModal('pro', event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closePayModal('pro')">&times;</span>
             <h3>正式员工计划</h3>
-            <p class="modal-subtitle">¥42/月 · 支付宝扫一扫</p>
+            <p class="modal-subtitle">¥49.9/月 · 支付宝扫一扫</p>
             <img src="alipay-qr.jpg" alt="支付宝付款码" class="qr-code">
             <div class="modal-notice">
                 <p>⚠️ <strong>重要：支付时请在「备注」栏填写您的邮箱！</strong></p>
@@ -1100,7 +1189,10 @@
         <div class="container reveal">
             <h2>雇一个 AI 员工吧。</h2>
             <p>不是工具。不是助手。<br>是一名会把事做完的人。</p>
-            <button onclick="openPayModal()" class="btn btn--primary">订阅 Mailya</button>
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                <button onclick="openPayModal('intern')" class="btn btn--secondary">¥9.9 实习生计划</button>
+                <button onclick="openPayModal('pro')" class="btn btn--primary">¥49.9 正式员工计划</button>
+            </div>
         </div>
     </section>
 
@@ -1150,14 +1242,22 @@
         })();
 
         // Payment Modal
-        function openPayModal() {
-            document.getElementById('payModal').classList.add('active');
+        function openPayModal(type) {
+            if (type === 'intern') {
+                document.getElementById('payModalIntern').classList.add('active');
+            } else {
+                document.getElementById('payModal').classList.add('active');
+            }
             document.body.style.overflow = 'hidden';
         }
 
-        function closePayModal(event) {
-            if (!event || event.target.id === 'payModal' || event.target.classList.contains('modal-close')) {
-                document.getElementById('payModal').classList.remove('active');
+        function closePayModal(type, event) {
+            if (!event || event.target.classList.contains('modal') || event.target.classList.contains('modal-close')) {
+                if (type === 'intern') {
+                    document.getElementById('payModalIntern').classList.remove('active');
+                } else {
+                    document.getElementById('payModal').classList.remove('active');
+                }
                 document.body.style.overflow = '';
             }
         }
@@ -1165,7 +1265,9 @@
         // Close modal on ESC key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                closePayModal();
+                document.getElementById('payModal').classList.remove('active');
+                document.getElementById('payModalIntern').classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
     </script>
