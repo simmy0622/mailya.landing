@@ -1222,7 +1222,7 @@
                         <li>对话记忆功能</li>
                     </ul>
                     
-                    <button onclick="openPayModal('intern')" class="btn btn--secondary" style="width: 100%;">订阅实习生</button>
+                    <button onclick="openPayModal()" class="btn btn--primary" style="width: 100%;">立即订阅</button>
                     
                     <div class="pricing-footer">
                         <span>适合轻度使用</span>
@@ -1246,7 +1246,7 @@
                         <li>更强推理能力 (DeepSeek Reasoner)</li>
                     </ul>
                     
-                    <button onclick="openPayModal('pro')" class="btn btn--primary" style="width: 100%;">订阅正式员工</button>
+                    <button onclick="openPayModal()" class="btn btn--primary" style="width: 100%;">立即订阅</button>
                     
                     <div class="pricing-footer">
                         <span>完整文件生成能力</span>
@@ -1257,15 +1257,15 @@
         </div>
     </section>
 
-    <!-- Payment Modal - 统一支付表单 -->
+    <!-- Payment Modal - 两步支付流程 -->
     <div id="payModal" class="modal" onclick="closePayModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="closePayModal()">&times;</span>
-            <h3 id="payModalTitle">订阅 Mailya</h3>
-            <p class="modal-subtitle" id="payModalSubtitle">¥49.9/月</p>
             
-            <form id="payForm" onsubmit="submitPayment(event)">
-                <input type="hidden" id="payPlan" value="pro">
+            <!-- Step 1: 输入邮箱 -->
+            <div id="payStep1">
+                <h3>订阅 Mailya</h3>
+                <p class="modal-subtitle">输入邮箱开始订阅</p>
                 
                 <div class="form-group">
                     <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
@@ -1278,16 +1278,36 @@
                     <input type="text" id="payName" placeholder="选填，方便我们称呼您">
                 </div>
                 
-                <button type="submit" id="paySubmitBtn" class="btn btn--primary" style="width: 100%; margin-top: 1rem;">
-                    立即支付
+                <button type="button" id="checkEmailBtn" class="btn btn--primary" style="width: 100%; margin-top: 1rem;" onclick="checkUserStatus()">
+                    下一步
                 </button>
                 
-                <div id="payLoading" style="display: none; text-align: center; padding: 1rem;">
-                    <p>正在创建订单...</p>
+                <div id="checkLoading" style="display: none; text-align: center; padding: 1rem;">
+                    <p>正在查询...</p>
                 </div>
+            </div>
+            
+            <!-- Step 2: 选择计划 -->
+            <div id="payStep2" style="display: none;">
+                <h3 id="step2Title">选择计划</h3>
+                <p class="modal-subtitle" id="step2Subtitle">请选择适合您的计划</p>
                 
-                <div id="payError" style="display: none; color: #dc2626; text-align: center; padding: 0.5rem; margin-top: 0.5rem;"></div>
-            </form>
+                <div id="userStatusBadge" style="margin-bottom: 1rem; padding: 0.75rem; background: var(--color-bg); border: 1px solid var(--color-border); font-size: 0.875rem;"></div>
+                
+                <!-- 计划选项容器 -->
+                <div id="planOptions" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                
+                <button type="button" class="btn btn--secondary" style="width: 100%; margin-top: 1rem;" onclick="goBackStep1()">
+                    ← 返回修改邮箱
+                </button>
+            </div>
+            
+            <!-- 支付中 -->
+            <div id="payStep3" style="display: none; text-align: center; padding: 2rem;">
+                <p>正在创建订单...</p>
+            </div>
+            
+            <div id="payError" style="display: none; color: #dc2626; text-align: center; padding: 0.5rem; margin-top: 0.5rem;"></div>
             
             <div class="modal-footer">
                 <p>💳 支持支付宝支付</p>
@@ -1324,8 +1344,7 @@
             <h2>雇一个 AI 员工吧。</h2>
             <p>不是工具。不是助手。<br>是一名会把事做完的人。</p>
             <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                <button onclick="openPayModal('intern')" class="btn btn--secondary">¥9.9 实习生计划</button>
-                <button onclick="openPayModal('pro')" class="btn btn--primary">¥49.9 正式员工计划</button>
+                <button onclick="openPayModal()" class="btn btn--primary" style="font-size: 1.1rem; padding: 1rem 2rem;">立即订阅 →</button>
             </div>
         </div>
     </section>
@@ -1343,7 +1362,7 @@
     </footer>
 
     <!-- Scroll Animation Script -->
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Reveal on scroll - more robust version
         (function() {
             function reveal() {
@@ -1378,44 +1397,28 @@
         // Payment Configuration
         const SUPABASE_URL = 'https://umxeagezqgjcityzhonk.supabase.co';
         const CREATE_ORDER_URL = SUPABASE_URL + '/functions/v1/create-order';
+        const CHECK_USER_URL = SUPABASE_URL + '/functions/v1/check-user';
         
-        const PLAN_CONFIG = {
-            intern: {
-                title: '实习生计划',
-                subtitle: '¥9.9/月',
-                btnText: '立即支付 ¥9.9'
-            },
-            pro: {
-                title: '正式员工计划',
-                subtitle: '¥49.9/月',
-                btnText: '立即支付 ¥49.9'
-            },
-            upgrade: {
-                title: '升级至正式员工',
-                subtitle: '¥40（实习生专享）',
-                btnText: '立即支付 ¥40'
-            }
-        };
+        let currentUserEmail = '';
+        let currentUserName = '';
+        let currentUserStatus = 'new';
 
-        // Payment Modal
-        function openPayModal(plan) {
-            const config = PLAN_CONFIG[plan] || PLAN_CONFIG.pro;
-            
-            document.getElementById('payModalTitle').textContent = config.title;
-            document.getElementById('payModalSubtitle').textContent = config.subtitle;
-            document.getElementById('paySubmitBtn').textContent = config.btnText;
-            document.getElementById('payPlan').value = plan;
-            
-            // 重置表单
-            document.getElementById('payForm').reset();
+        // 打开支付弹窗
+        function openPayModal() {
+            // 重置到第一步
+            document.getElementById('payStep1').style.display = 'block';
+            document.getElementById('payStep2').style.display = 'none';
+            document.getElementById('payStep3').style.display = 'none';
             document.getElementById('payError').style.display = 'none';
-            document.getElementById('payLoading').style.display = 'none';
-            document.getElementById('paySubmitBtn').style.display = 'block';
+            document.getElementById('checkLoading').style.display = 'none';
+            document.getElementById('checkEmailBtn').style.display = 'block';
+            
+            document.getElementById('payEmail').value = '';
+            document.getElementById('payName').value = '';
             
             document.getElementById('payModal').classList.add('active');
             document.body.style.overflow = 'hidden';
             
-            // 聚焦邮箱输入框
             setTimeout(() => {
                 document.getElementById('payEmail').focus();
             }, 100);
@@ -1428,66 +1431,174 @@
             }
         }
 
-        // Submit Payment
-        async function submitPayment(event) {
-            event.preventDefault();
-            
+        // 第一步：查询用户状态
+        async function checkUserStatus() {
             const email = document.getElementById('payEmail').value.trim();
             const name = document.getElementById('payName').value.trim();
-            const plan = document.getElementById('payPlan').value;
             
-            // 验证邮箱
             if (!email || !email.includes('@')) {
                 showPayError('请输入有效的邮箱地址');
                 return;
             }
             
-            // 显示加载状态
-            document.getElementById('paySubmitBtn').style.display = 'none';
-            document.getElementById('payLoading').style.display = 'block';
+            currentUserEmail = email;
+            currentUserName = name;
+            
+            document.getElementById('checkEmailBtn').style.display = 'none';
+            document.getElementById('checkLoading').style.display = 'block';
+            document.getElementById('payError').style.display = 'none';
+            
+            try {
+                const response = await fetch(CHECK_USER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUserStatus = result.data.status;
+                    showStep2(result.data);
+                } else {
+                    showPayError(result.error || '查询失败');
+                    document.getElementById('checkEmailBtn').style.display = 'block';
+                    document.getElementById('checkLoading').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Check user error:', error);
+                showPayError('网络错误');
+                document.getElementById('checkEmailBtn').style.display = 'block';
+                document.getElementById('checkLoading').style.display = 'none';
+            }
+        }
+
+        // 显示第二步：选择计划
+        function showStep2(userData) {
+            document.getElementById('payStep1').style.display = 'none';
+            document.getElementById('payStep2').style.display = 'block';
+            
+            const statusBadge = document.getElementById('userStatusBadge');
+            const planOptions = document.getElementById('planOptions');
+            const step2Title = document.getElementById('step2Title');
+            const step2Subtitle = document.getElementById('step2Subtitle');
+            
+            // 格式化到期时间
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            
+            planOptions.innerHTML = '';
+            
+            if (userData.status === 'pro') {
+                // 正式员工
+                statusBadge.innerHTML = `<strong>👔 当前身份：正式员工</strong><br>到期时间：${formatDate(userData.expires_at)}`;
+                statusBadge.style.borderColor = 'var(--color-highlight)';
+                step2Title.textContent = '续费正式员工';
+                step2Subtitle.textContent = '延长您的订阅时间';
+                
+                planOptions.innerHTML = `
+                    <button class="btn btn--primary" style="width: 100%;" onclick="submitOrder('pro')">
+                        续费正式员工 ¥49.9/月
+                    </button>
+                `;
+                
+            } else if (userData.status === 'intern') {
+                // 实习生
+                statusBadge.innerHTML = `<strong>🎓 当前身份：实习生</strong><br>到期时间：${formatDate(userData.expires_at)}`;
+                statusBadge.style.borderColor = 'var(--color-text-muted)';
+                step2Title.textContent = '续费或升级';
+                step2Subtitle.textContent = '选择适合您的方案';
+                
+                planOptions.innerHTML = `
+                    <button class="btn btn--secondary" style="width: 100%;" onclick="submitOrder('intern')">
+                        续费实习生 ¥9.9/月
+                    </button>
+                    <button class="btn btn--primary" style="width: 100%;" onclick="submitOrder('upgrade')">
+                        🚀 升级正式员工 ¥40（推荐）
+                    </button>
+                    <p style="font-size: 0.75rem; color: var(--color-text-dim); text-align: center; margin-top: 0.5rem;">
+                        升级后立即享受 6 倍额度 + DeepSeek Reasoner 模型
+                    </p>
+                `;
+                
+            } else {
+                // 新用户或已过期
+                statusBadge.innerHTML = userData.status === 'expired' 
+                    ? `<strong>⏰ 订阅已过期</strong><br>选择计划重新开始`
+                    : `<strong>👋 欢迎新用户</strong><br>选择适合您的计划`;
+                statusBadge.style.borderColor = 'var(--color-border)';
+                step2Title.textContent = '选择计划';
+                step2Subtitle.textContent = '开始您的 Mailya 之旅';
+                
+                planOptions.innerHTML = `
+                    <button class="btn btn--secondary" style="width: 100%;" onclick="submitOrder('intern')">
+                        实习生计划 ¥9.9/月
+                    </button>
+                    <button class="btn btn--primary" style="width: 100%;" onclick="submitOrder('pro')">
+                        ⭐ 正式员工计划 ¥49.9/月（推荐）
+                    </button>
+                    <p style="font-size: 0.75rem; color: var(--color-text-dim); text-align: center; margin-top: 0.5rem;">
+                        正式员工享受 6 倍额度 + DeepSeek Reasoner 模型 + 全格式文件
+                    </p>
+                `;
+            }
+        }
+
+        // 返回第一步
+        function goBackStep1() {
+            document.getElementById('payStep1').style.display = 'block';
+            document.getElementById('payStep2').style.display = 'none';
+            document.getElementById('checkEmailBtn').style.display = 'block';
+            document.getElementById('checkLoading').style.display = 'none';
+        }
+
+        // 提交订单
+        async function submitOrder(plan) {
+            document.getElementById('payStep2').style.display = 'none';
+            document.getElementById('payStep3').style.display = 'block';
             document.getElementById('payError').style.display = 'none';
             
             try {
                 const response = await fetch(CREATE_ORDER_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, name, plan })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: currentUserEmail, 
+                        name: currentUserName, 
+                        plan 
+                    })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success && result.data && result.data.pay_url) {
-                    // 跳转到支付页面
                     window.location.href = result.data.pay_url;
                 } else {
-                    showPayError(result.error || '创建订单失败，请重试');
+                    showPayError(result.error || '创建订单失败');
+                    document.getElementById('payStep2').style.display = 'block';
+                    document.getElementById('payStep3').style.display = 'none';
                 }
             } catch (error) {
                 console.error('Payment error:', error);
-                showPayError('网络错误，请检查网络后重试');
+                showPayError('网络错误');
+                document.getElementById('payStep2').style.display = 'block';
+                document.getElementById('payStep3').style.display = 'none';
             }
         }
 
         function showPayError(message) {
             document.getElementById('payError').textContent = message;
             document.getElementById('payError').style.display = 'block';
-            document.getElementById('paySubmitBtn').style.display = 'block';
-            document.getElementById('payLoading').style.display = 'none';
         }
 
-        // Check payment status on page load
+        // 检查支付状态
         function checkPaymentStatus() {
             const params = new URLSearchParams(window.location.search);
-            const paymentStatus = params.get('payment');
-            const orderNo = params.get('order');
-            
-            if (paymentStatus === 'success') {
-                // 显示成功提示
+            if (params.get('payment') === 'success') {
                 showSuccessToast();
-                
-                // 清除 URL 参数
                 const url = new URL(window.location);
                 url.searchParams.delete('payment');
                 url.searchParams.delete('order');
@@ -1496,27 +1607,20 @@
         }
 
         function showSuccessToast() {
-            const toast = document.getElementById('successToast');
-            toast.style.display = 'block';
-            
-            // 5秒后自动关闭
-            setTimeout(() => {
-                closeToast();
-            }, 8000);
+            document.getElementById('successToast').style.display = 'block';
+            setTimeout(closeToast, 8000);
         }
 
         function closeToast() {
             document.getElementById('successToast').style.display = 'none';
         }
 
-        // Close modal on ESC key
+        // ESC 关闭弹窗
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closePayModal();
-            }
+            if (e.key === 'Escape') closePayModal();
         });
 
-        // Check payment status when page loads
+        // 页面加载时检查支付状态
         document.addEventListener('DOMContentLoaded', checkPaymentStatus);
     </script>
 
