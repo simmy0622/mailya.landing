@@ -513,6 +513,119 @@
             color: #ff6b6b;
         }
 
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--color-text);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-highlight);
+        }
+
+        .form-group input::placeholder {
+            color: var(--color-text-dim);
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--color-text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .modal-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 0.8rem;
+            color: var(--color-text-dim);
+            text-align: center;
+        }
+
+        .modal-footer p {
+            margin: 0.25rem 0;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            animation: slideDown 0.3s ease;
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #065f46;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 90vw;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-text {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-desc {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .toast-close {
+            cursor: pointer;
+            font-size: 1.25rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
         .identity-content {
             max-width: 700px;
         }
@@ -1144,33 +1257,54 @@
         </div>
     </section>
 
-    <!-- Payment Modal - Intern -->
-    <div id="payModalIntern" class="modal" onclick="closePayModal('intern', event)">
+    <!-- Payment Modal - 统一支付表单 -->
+    <div id="payModal" class="modal" onclick="closePayModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close" onclick="closePayModal('intern')">&times;</span>
-            <h3>实习生计划</h3>
-            <p class="modal-subtitle">¥9.9/月 · 支付宝扫一扫</p>
-            <img src="alipay-qr-intern.jpg" alt="支付宝付款码" class="qr-code">
-            <div class="modal-notice">
-                <p>⚠️ <strong>重要：支付时请在「备注」栏填写您的邮箱！</strong></p>
-                <p>⏰ 支付后 <strong>24 小时内</strong> 开通服务</p>
-                <p>📧 开通后发邮件至 <strong>mailya&#64;mailya.asia</strong> 即可使用</p>
+            <span class="modal-close" onclick="closePayModal()">&times;</span>
+            <h3 id="payModalTitle">订阅 Mailya</h3>
+            <p class="modal-subtitle" id="payModalSubtitle">¥49.9/月</p>
+            
+            <form id="payForm" onsubmit="submitPayment(event)">
+                <input type="hidden" id="payPlan" value="pro">
+                
+                <div class="form-group">
+                    <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
+                    <input type="email" id="payEmail" placeholder="your@email.com" required>
+                    <p class="form-hint">开通后，发邮件到 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="97faf6fefbeef6d7faf6fefbeef6b9f6e4fef6">[email&#160;protected]</a> 即可使用</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="payName">您的称呼</label>
+                    <input type="text" id="payName" placeholder="选填，方便我们称呼您">
+                </div>
+                
+                <button type="submit" id="paySubmitBtn" class="btn btn--primary" style="width: 100%; margin-top: 1rem;">
+                    立即支付
+                </button>
+                
+                <div id="payLoading" style="display: none; text-align: center; padding: 1rem;">
+                    <p>正在创建订单...</p>
+                </div>
+                
+                <div id="payError" style="display: none; color: #dc2626; text-align: center; padding: 0.5rem; margin-top: 0.5rem;"></div>
+            </form>
+            
+            <div class="modal-footer">
+                <p>💳 支持支付宝支付</p>
+                <p>⏰ 支付成功后立即开通</p>
             </div>
         </div>
     </div>
-
-    <!-- Payment Modal - Pro -->
-    <div id="payModal" class="modal" onclick="closePayModal('pro', event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="modal-close" onclick="closePayModal('pro')">&times;</span>
-            <h3>正式员工计划</h3>
-            <p class="modal-subtitle">¥49.9/月 · 支付宝扫一扫</p>
-            <img src="alipay-qr.jpg" alt="支付宝付款码" class="qr-code">
-            <div class="modal-notice">
-                <p>⚠️ <strong>重要：支付时请在「备注」栏填写您的邮箱！</strong></p>
-                <p>⏰ 支付后 <strong>24 小时内</strong> 开通服务</p>
-                <p>📧 开通后发邮件至 <strong>mailya&#64;mailya.asia</strong> 即可使用</p>
+    
+    <!-- Success Toast -->
+    <div id="successToast" class="toast" style="display: none;">
+        <div class="toast-content">
+            <span class="toast-icon">🎉</span>
+            <div class="toast-text">
+                <p class="toast-title">支付成功！</p>
+                <p class="toast-desc">您的订阅已开通，快给 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2d404c4441544c6d404c4441544c034c5e444c">[email&#160;protected]</a> 发邮件试试吧！</p>
             </div>
+            <span class="toast-close" onclick="closeToast()">&times;</span>
         </div>
     </div>
 
@@ -1209,7 +1343,7 @@
     </footer>
 
     <!-- Scroll Animation Script -->
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Reveal on scroll - more robust version
         (function() {
             function reveal() {
@@ -1241,36 +1375,135 @@
             setTimeout(reveal, 500);
         })();
 
+        // Payment Configuration
+        const SUPABASE_URL = 'https://umxeagezqgjcityzhonk.supabase.co';
+        const CREATE_ORDER_URL = SUPABASE_URL + '/functions/v1/create-order';
+        
+        const PLAN_CONFIG = {
+            intern: {
+                title: '实习生计划',
+                subtitle: '¥9.9/月',
+                btnText: '立即支付 ¥9.9'
+            },
+            pro: {
+                title: '正式员工计划',
+                subtitle: '¥49.9/月',
+                btnText: '立即支付 ¥49.9'
+            },
+            upgrade: {
+                title: '升级至正式员工',
+                subtitle: '¥40（实习生专享）',
+                btnText: '立即支付 ¥40'
+            }
+        };
+
         // Payment Modal
-        function openPayModal(type) {
-            if (type === 'intern') {
-                document.getElementById('payModalIntern').classList.add('active');
-            } else {
-                document.getElementById('payModal').classList.add('active');
-            }
+        function openPayModal(plan) {
+            const config = PLAN_CONFIG[plan] || PLAN_CONFIG.pro;
+            
+            document.getElementById('payModalTitle').textContent = config.title;
+            document.getElementById('payModalSubtitle').textContent = config.subtitle;
+            document.getElementById('paySubmitBtn').textContent = config.btnText;
+            document.getElementById('payPlan').value = plan;
+            
+            // 重置表单
+            document.getElementById('payForm').reset();
+            document.getElementById('payError').style.display = 'none';
+            document.getElementById('payLoading').style.display = 'none';
+            document.getElementById('paySubmitBtn').style.display = 'block';
+            
+            document.getElementById('payModal').classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // 聚焦邮箱输入框
+            setTimeout(() => {
+                document.getElementById('payEmail').focus();
+            }, 100);
         }
 
-        function closePayModal(type, event) {
+        function closePayModal(event) {
             if (!event || event.target.classList.contains('modal') || event.target.classList.contains('modal-close')) {
-                if (type === 'intern') {
-                    document.getElementById('payModalIntern').classList.remove('active');
-                } else {
-                    document.getElementById('payModal').classList.remove('active');
-                }
+                document.getElementById('payModal').classList.remove('active');
                 document.body.style.overflow = '';
             }
         }
 
-        // Close modal on ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('payModal').classList.remove('active');
-                document.getElementById('payModalIntern').classList.remove('active');
-                document.body.style.overflow = '';
+        // Submit Payment
+        async function submitPayment(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('payEmail').value.trim();
+            const name = document.getElementById('payName').value.trim();
+            const plan = document.getElementById('payPlan').value;
+            
+            // 验证邮箱
+            if (!email || !email.includes('@')) {
+                showPayError('请输入有效的邮箱地址');
+                return;
             }
-        });
-    </script>
+            
+            // 显示加载状态
+            document.getElementById('paySubmitBtn').style.display = 'none';
+            document.getElementById('payLoading').style.display = 'block';
+            document.getElementById('payError').style.display = 'none';
+            
+            try {
+                const response = await fetch(CREATE_ORDER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, name, plan })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.data && result.data.pay_url) {
+                    // 跳转到支付页面
+                    window.location.href = result.data.pay_url;
+                } else {
+                    showPayError(result.error || '创建订单失败，请重试');
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                showPayError('网络错误，请检查网络后重试');
+            }
+        }
 
-</body>
-</html>
+        function showPayError(message) {
+            document.getElementById('payError').textContent = message;
+            document.getElementById('payError').style.display = 'block';
+            document.getElementById('paySubmitBtn').style.display = 'block';
+            document.getElementById('payLoading').style.display = 'none';
+        }
+
+        // Check payment status on page load
+        function checkPaymentStatus() {
+            const params = new URLSearchParams(window.location.search);
+            const paymentStatus = params.get('payment');
+            const orderNo = params.get('order');
+            
+            if (paymentStatus === 'success') {
+                // 显示成功提示
+                showSuccessToast();
+                
+                // 清除 URL 参数
+                const url = new URL(window.location);
+                url.searchParams.delete('payment');
+                url.searchParams.delete('order');
+                window.history.replaceState({}, document.title, url.pathname);
+            }
+        }
+
+        function showSuccessToast() {
+            const toast = document.getElementById('successToast');
+            toast.style.display = 'block';
+            
+            // 5秒后自动关闭
+            setTimeout(() => {
+                closeToast();
+            }, 8000);
+        }
+
+        function closeToast() {
+            document.getElementById('successToast').style.display = 'none';
