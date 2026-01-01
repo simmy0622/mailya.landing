@@ -1270,7 +1270,7 @@
                 <div class="form-group">
                     <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
                     <input type="email" id="payEmail" placeholder="your@email.com" required>
-                    <p class="form-hint">开通后，发邮件到 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="97faf6fefbeef6d7faf6fefbeef6b9f6e4fef6">[email&#160;protected]</a> 即可使用</p>
+                    <p class="form-hint">开通后，发邮件到 mailya@mailya.asia 即可使用</p>
                 </div>
                 
                 <div class="form-group">
@@ -1302,7 +1302,7 @@
             <span class="toast-icon">🎉</span>
             <div class="toast-text">
                 <p class="toast-title">支付成功！</p>
-                <p class="toast-desc">您的订阅已开通，快给 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2d404c4441544c6d404c4441544c034c5e444c">[email&#160;protected]</a> 发邮件试试吧！</p>
+                <p class="toast-desc">您的订阅已开通，快给 mailya@mailya.asia 发邮件试试吧！</p>
             </div>
             <span class="toast-close" onclick="closeToast()">&times;</span>
         </div>
@@ -1343,7 +1343,7 @@
     </footer>
 
     <!-- Scroll Animation Script -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // Reveal on scroll - more robust version
         (function() {
             function reveal() {
@@ -1507,3 +1507,18 @@
 
         function closeToast() {
             document.getElementById('successToast').style.display = 'none';
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePayModal();
+            }
+        });
+
+        // Check payment status when page loads
+        document.addEventListener('DOMContentLoaded', checkPaymentStatus);
+    </script>
+
+</body>
+</html>
