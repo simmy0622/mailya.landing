@@ -980,110 +980,6 @@
         .reveal.active {
             animation: none;
         }
-
-        /* Success Modal */
-        .success-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .success-modal.active {
-            display: flex;
-        }
-
-        .success-modal-content {
-            background: var(--color-bg-card);
-            border: 2px solid var(--color-highlight);
-            padding: 3rem;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            position: relative;
-            animation: successPop 0.5s ease;
-        }
-
-        @keyframes successPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .success-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .success-modal-content h2 {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            color: var(--color-highlight);
-            margin-bottom: 1rem;
-        }
-
-        .success-modal-content .plan-badge {
-            display: inline-block;
-            background: var(--color-highlight);
-            color: var(--color-bg);
-            padding: 0.5rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-        }
-
-        .success-modal-content p {
-            color: var(--color-text-muted);
-            margin-bottom: 1rem;
-            line-height: 1.8;
-        }
-
-        .success-modal-content .email-highlight {
-            color: var(--color-highlight);
-            font-weight: 500;
-        }
-
-        .success-steps {
-            background: var(--color-bg);
-            border: 1px solid var(--color-border);
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-
-        .success-steps h4 {
-            font-size: 0.9rem;
-            color: var(--color-text);
-            margin-bottom: 1rem;
-        }
-
-        .success-steps p {
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .success-steps p::before {
-            content: attr(data-step);
-            position: absolute;
-            left: 0;
-            color: var(--color-highlight);
-        }
-
-        .success-order-info {
-            font-size: 0.8rem;
-            color: var(--color-text-dim);
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--color-border);
-        }
     </style>
 </head>
 <body>
@@ -1287,7 +1183,7 @@
                 <div class="step">
                     <div class="step-number">1</div>
                     <h3>订阅 Mailya</h3>
-                    <p>支付后立即开通</p>
+                    <p>支付后 24 小时内开通</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
@@ -1347,7 +1243,7 @@
                         <li>直接输出 Word / PPT / Excel / PDF</li>
                         <li>联网实时搜索</li>
                         <li>对话记忆功能</li>
-                        <li>更强推理能力</li>
+                        <li>更强推理能力 (DeepSeek Reasoner)</li>
                     </ul>
                     
                     <button onclick="openPayModal()" class="btn btn--primary" style="width: 100%;">立即订阅</button>
@@ -1401,14 +1297,6 @@
                 <!-- 计划选项容器 -->
                 <div id="planOptions" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
                 
-                <!-- 用户协议勾选 -->
-                <div id="termsCheckbox" style="margin-top: 1rem; padding: 1rem; background: var(--color-bg); border: 1px solid var(--color-border);">
-                    <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.6;">
-                        <input type="checkbox" id="agreeTerms" style="margin-top: 3px; width: 16px; height: 16px; accent-color: var(--color-highlight);">
-                        <span>我已阅读并同意 <a href="/terms.html" target="_blank" style="color: var(--color-highlight);">《用户服务协议》</a> 和 <a href="/privacy.html" target="_blank" style="color: var(--color-highlight);">《隐私政策》</a>，了解退款政策及服务条款</span>
-                    </label>
-                </div>
-                
                 <button type="button" class="btn btn--secondary" style="width: 100%; margin-top: 1rem;" onclick="goBackStep1()">
                     ← 返回修改邮箱
                 </button>
@@ -1422,38 +1310,13 @@
             <div id="payError" style="display: none; color: #dc2626; text-align: center; padding: 0.5rem; margin-top: 0.5rem;"></div>
             
             <div class="modal-footer">
-                <p>💳 支持微信支付</p>
+                <p>💳 支持支付宝支付</p>
                 <p>⏰ 支付成功后立即开通</p>
             </div>
         </div>
     </div>
-
-    <!-- Success Modal (支付成功弹窗) -->
-    <div id="successModal" class="success-modal" onclick="closeSuccessModal(event)">
-        <div class="success-modal-content" onclick="event.stopPropagation()">
-            <div class="success-icon">🎉</div>
-            <h2>恭喜，订阅成功！</h2>
-            <div class="plan-badge" id="successPlanName">正式员工计划</div>
-            
-            <p>您的邮箱 <span class="email-highlight" id="successEmail">example@email.com</span> 已成功开通 Mailya 服务！</p>
-            
-            <div class="success-steps">
-                <h4>📮 开始使用</h4>
-                <p data-step="1. ">打开您的邮箱客户端</p>
-                <p data-step="2. ">新建邮件，收件人填写 mailya@mailya.asia</p>
-                <p data-step="3. ">写下您的需求，AI 将在几分钟内回复</p>
-            </div>
-            
-            <button class="btn btn--primary" style="width: 100%;" onclick="closeSuccessModal()">开始使用</button>
-            
-            <div class="success-order-info">
-                订单号：<span id="successOrderNo">-</span><br>
-                支付金额：<span id="successAmount">-</span>
-            </div>
-        </div>
-    </div>
     
-    <!-- Success Toast (简单提示，备用) -->
+    <!-- Success Toast -->
     <div id="successToast" class="toast" style="display: none;">
         <div class="toast-content">
             <span class="toast-icon">🎉</span>
@@ -1499,7 +1362,7 @@
     </footer>
 
     <!-- Scroll Animation Script -->
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Reveal on scroll - more robust version
         (function() {
             function reveal() {
@@ -1532,7 +1395,7 @@
         })();
 
         // Payment Configuration
-        const SUPABASE_URL = 'https://fnjzskcfokfqlrevlbqv.supabase.co';
+        const SUPABASE_URL = 'https://umxeagezqgjcityzhonk.supabase.co';
         const CREATE_ORDER_URL = SUPABASE_URL + '/functions/v1/create-order';
         const CHECK_USER_URL = SUPABASE_URL + '/functions/v1/check-user';
         
@@ -1615,9 +1478,6 @@
             document.getElementById('payStep1').style.display = 'none';
             document.getElementById('payStep2').style.display = 'block';
             
-            // 重置协议勾选
-            document.getElementById('agreeTerms').checked = false;
-            
             const statusBadge = document.getElementById('userStatusBadge');
             const planOptions = document.getElementById('planOptions');
             const step2Title = document.getElementById('step2Title');
@@ -1697,12 +1557,6 @@
 
         // 提交订单
         async function submitOrder(plan) {
-            // 检查是否勾选协议
-            if (!document.getElementById('agreeTerms').checked) {
-                showPayError('请先阅读并同意用户协议和隐私政策');
-                return;
-            }
-            
             document.getElementById('payStep2').style.display = 'none';
             document.getElementById('payStep3').style.display = 'block';
             document.getElementById('payError').style.display = 'none';
@@ -1740,54 +1594,15 @@
             document.getElementById('payError').style.display = 'block';
         }
 
-        // 检查支付状态（从 ZPAY 跳转回来）
+        // 检查支付状态
         function checkPaymentStatus() {
             const params = new URLSearchParams(window.location.search);
-            const tradeStatus = params.get('trade_status');
-            const outTradeNo = params.get('out_trade_no');
-            const param = params.get('param');
-            const money = params.get('money');
-            
-            // 如果有支付参数，显示成功弹窗
-            if (tradeStatus === 'TRADE_SUCCESS' || outTradeNo || param) {
-                // 解析 param: plan|email
-                let plan = 'pro';
-                let email = '';
-                
-                if (param) {
-                    const parts = param.split('|');
-                    plan = parts[0] || 'pro';
-                    email = parts[1] || '';
-                }
-                
-                // 设置成功弹窗内容
-                const planNames = {
-                    'intern': '🎓 实习生计划',
-                    'pro': '💼 正式员工计划',
-                    'upgrade': '⬆️ 升级正式员工'
-                };
-                
-                document.getElementById('successPlanName').textContent = planNames[plan] || plan;
-                document.getElementById('successEmail').textContent = email || '您的邮箱';
-                document.getElementById('successOrderNo').textContent = outTradeNo || '-';
-                document.getElementById('successAmount').textContent = money ? `¥${money}` : '-';
-                
-                // 显示成功弹窗
-                document.getElementById('successModal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-                
-                // 清除 URL 参数
+            if (params.get('payment') === 'success') {
+                showSuccessToast();
                 const url = new URL(window.location);
-                url.search = '';
+                url.searchParams.delete('payment');
+                url.searchParams.delete('order');
                 window.history.replaceState({}, document.title, url.pathname);
-            }
-        }
-
-        // 关闭成功弹窗
-        function closeSuccessModal(event) {
-            if (!event || event.target.classList.contains('success-modal')) {
-                document.getElementById('successModal').classList.remove('active');
-                document.body.style.overflow = '';
             }
         }
 
@@ -1802,10 +1617,7 @@
 
         // ESC 关闭弹窗
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closePayModal();
-                closeSuccessModal();
-            }
+            if (e.key === 'Escape') closePayModal();
         });
 
         // 页面加载时检查支付状态
