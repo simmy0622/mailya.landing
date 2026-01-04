@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail as a Platform — Mailya 宣言</title>
+    <meta name="description" content="未来与 AI Agent 交互的最佳形式，早在1971年就已写下答案。">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-bg: #0a0a0a;
+            --color-bg-elevated: #111;
+            --color-bg-card: #161616;
+            --color-text: #e8e6e3;
+            --color-text-muted: #888;
+            --color-text-dim: #555;
+            --color-highlight: #c9a959;
+            --color-highlight-dim: rgba(201, 169, 89, 0.15);
+            --color-border: #252525;
+            --color-red: #e85d5d;
+            --color-green: #5de87a;
+            --font-serif: 'Noto Serif SC', Georgia, serif;
+            --font-sans: 'Noto Sans SC', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.9;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-text);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-highlight);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 169, 89, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 50% 120%, rgba(201, 169, 89, 0.05), transparent);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--color-text-dim);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.2s forwards;
+        }
+
+        .hero-title span {
+            color: var(--color-highlight);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            color: var(--color-text-muted);
+            max-width: 750px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.4s forwards;
+        }
+
+        .hero-years {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 4rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
+        }
+
+        .hero-year-item {
+            text-align: center;
+        }
+
+        .hero-year-item .year {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-highlight);
+        }
+
+        .hero-year-item .label {
+            font-size: 0.8rem;
+            color: var(--color-text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .hero-arrow {
+            font-size: 2rem;
+            color: var(--color-text-dim);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-text-dim);
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s ease 1s forwards;
+        }
+
+        .scroll-indicator::after {
+            content: '';
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--color-highlight), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        /* Sections */
+        .section {
+            padding: 160px 24px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .container--wide {
+            max-width: 1100px;
+        }
+
+        .section-number {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-highlight);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--color-text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 600;
+            line-height: 1.25;
+            margin-bottom: 2rem;
+        }
+
+        .section-text {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-text strong {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .section-text em {
+            color: var(--color-highlight);
+            font-style: normal;
+        }
+
+        /* Loop Section */
+        .loop {
+            background: var(--color-bg);
+        }
+
+        .loop-intro {
+            max-width: 800px;
+            margin-bottom: 80px;
+        }
+
+        .loop-intro .lead {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .loop-intro .lead .strike {
+            text-decoration: line-through;
+            color: var(--color-text-dim);
+        }
+
+        .chatbox-critique {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 60px 0;
+        }
+
+        .chatbox-bubble {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: var(--color-bg);
+            border-radius: 20px;
+            max-width: 300px;
+            margin-bottom: 16px;
+        }
+
+        .chatbox-bubble .typing {
+            display: flex;
+            gap: 4px;
+        }
+
+        .chatbox-bubble .typing span {
+            width: 8px;
+            height: 8px;
+            background: var(--color-text-dim);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .chatbox-bubble .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .chatbox-bubble .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        .chatbox-critique .critique-text {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            margin-top: 24px;
+            padding-left: 20px;
+            border-left: 2px solid var(--color-red);
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 60px 0;
+        }
+
+        .comparison-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .comparison-card.negative {
+            border-color: rgba(232, 93, 93, 0.3);
+        }
+
+        .comparison-card.positive {
+            border-color: rgba(201, 169, 89, 0.3);
+        }
+
+        .comparison-card h3 {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comparison-card.negative h3 {
+            color: var(--color-red);
+        }
+
+        .comparison-card.positive h3 {
+            color: var(--color-highlight);
+        }
+
+        .comparison-card ul {
+            list-style: none;
+        }
+
+        .comparison-card li {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .comparison-card li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .comparison-card.negative li::before {
+            background: var(--color-red);
+        }
+
+        .comparison-card.positive li::before {
+            background: var(--color-highlight);
+        }
+
+        /* SMTP Redefinition */
+        .smtp-redefine {
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 60px;
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .smtp-redefine .old {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--color-text-dim);
+            text-decoration: line-through;
+            margin-bottom: 16px;
+        }
+
+        .smtp-redefine .new {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: var(--color-highlight);
+        }
+
+        .smtp-redefine .desc {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            margin-top: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Orchestrator Section */
+        .orchestrator {
+            background: var(--color-bg-elevated);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .orchestrator-intro {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .orchestrator-intro .highlight-box {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--color-highlight-dim);
+            border: 1px solid rgba(201, 169, 89, 0.3);
+            border-radius: 100px;
+            font-size: 1rem;
+            color: var(--color-highlight);
+            margin-top: 24px;
+        }
+
+        .islands-critique {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .islands-critique p {
+            font-size: 1.05rem;
+            color: var(--color-text-muted);
+            margin-bottom: 16px;
+        }
+
+        .islands-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .island-tag {
+            padding: 8px 16px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--color-text-dim);
+        }
+
+        /* Email Demo */
+        .email-demo {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 60px 0;
+        }
+
+        .email-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .email-header .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .email-header .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-border);
+        }
+
+        .email-header .dot:first-child { background: #ff5f57; }
+        .email-header .dot:nth-child(2) { background: #ffbd2e; }
+        .email-header .dot:nth-child(3) { background: #28ca42; }
+
+        .email-header .title {
+            font-size: 0.85rem;
+            color: var(--color-text-dim);
+        }
+
+        .email-content {
+            padding: 30px;
+        }
+
+        .email-meta {
+            font-size: 0.85rem;
+            color: var(--color-text-dim);
+            margin-bottom: 20px;
+        }
+
+        .email-meta span {
+            color: var(--color-text-muted);
+        }
+
+        .email-body {
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .email-body .subject {
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        /* Workflow */
+        .workflow {
+            margin-top: 60px;
+        }
+
+        .workflow-title {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-highlight);
+            margin-bottom: 24px;
+            letter-spacing: 0.1em;
+        }
+
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 24px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            border-color: var(--color-highlight);
+            transform: translateX(8px);
+        }
+
+        .workflow-step .number {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-highlight);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-highlight-dim);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .workflow-step .model {
+            font-weight: 500;
+            color: var(--color-text);
+            min-width: 120px;
+        }
+
+        .workflow-step .task {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+        }
+
+        .workflow-result {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: var(--color-highlight-dim);
+            border: 1px dashed rgba(201, 169, 89, 0.3);
+            border-radius: 12px;
+        }
+
+        .workflow-result p {
+            font-size: 1.1rem;
+            color: var(--color-text);
+        }
+
+        .workflow-result .action {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--color-highlight);
+            margin-top: 8px;
+        }
+
+        /* Employee Section */
+        .employee {
+            background: var(--color-bg);
+        }
+
+        .employee-header {
+            margin-bottom: 80px;
+        }
+
+        .employee-header .lead {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .employee-header .lead .strike {
+            text-decoration: line-through;
+            color: var(--color-text-dim);
+        }
+
+        .employee-header .lead em {
+            color: var(--color-highlight);
+            font-style: normal;
+        }
+
+        .capabilities {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 60px 0;
+        }
+
+        .capability-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            transition: all 0.3s ease;
+        }
+
+        .capability-card:hover {
+            border-color: var(--color-highlight);
+            transform: translateY(-4px);
+        }
+
+        .capability-card .icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .capability-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .capability-card .role {
+            font-size: 0.85rem;
+            color: var(--color-highlight);
+            margin-bottom: 12px;
+        }
+
+        .capability-card p {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Final Statement */
+        .final-statement {
+            text-align: center;
+            margin-top: 100px;
+            padding: 80px 40px;
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border);
+            border-radius: 24px;
+        }
+
+        .final-statement .pre {
+            font-size: 1rem;
+            color: var(--color-text-dim);
+            margin-bottom: 16px;
+        }
+
+        .final-statement .pre .strike {
+            text-decoration: line-through;
+        }
+
+        .final-statement .main {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--color-highlight);
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 200px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201, 169, 89, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-muted);
+            max-width: 550px;
+            margin: 0 auto 3rem;
+        }
+
+        .cta-email {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 40px;
+            background: var(--color-highlight);
+            color: var(--color-bg);
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .cta-email:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(201, 169, 89, 0.3);
+        }
+
+        .cta-email svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 24px;
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: var(--color-text-dim);
+        }
+
+        .footer-text a {
+            color: var(--color-highlight);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.5; transform: scaleY(0.8); }
+        }
+
+        @keyframes typing {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-4px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .capabilities {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 16px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section {
+                padding: 100px 20px;
+            }
+
+            .hero-years {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero-arrow {
+                transform: rotate(90deg);
+            }
+
+            .workflow-step {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .workflow-step .model {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="/" class="nav-logo">Mailya</a>
+        <div class="nav-links">
+            <a href="/">首页</a>
+            <a href="/manifesto.html">宣言</a>
+            <a href="/terms.html">服务条款</a>
+            <a href="/privacy.html">隐私政策</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-eyebrow">A Manifesto</p>
+            <h1 class="hero-title">
+                Mail <span>as a</span> Platform
+            </h1>
+            <p class="hero-subtitle">
+                我们在寻找 AI 交互的终极形态时，走了一段弯路。<br>
+                最好的答案，恰恰写在互联网最初的时代。
+            </p>
+            <div class="hero-years">
+                <div class="hero-year-item">
+                    <div class="year">1971</div>
+                    <div class="label">SMTP 诞生</div>
+                </div>
+                <div class="hero-arrow">→</div>
+                <div class="hero-year-item">
+                    <div class="year">2025</div>
+                    <div class="label">Agent 时代</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+        </div>
+    </section>
+
+    <!-- 01. The Loop -->
+    <section class="section loop">
+        <div class="container container--wide">
+            <p class="section-number">01</p>
+            <p class="section-label">The Loop: 1971 / 2025</p>
+            <h2 class="section-title">回环：从起点到终点</h2>
+
+            <div class="loop-intro">
+                <p class="lead">
+                    我们被困在了 Chatbox 的"正在输出..."气泡里。<br>
+                    被迫盯着屏幕，等待一个光标逐字跳动。<br>
+                    <strong>这是一种对人类注意力的掠夺。</strong>
+                </p>
+            </div>
+
+            <div class="chatbox-critique">
+                <div class="chatbox-bubble">
+                    <div class="typing">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span style="color: var(--color-text-dim); font-size: 0.9rem;">正在输出...</span>
+                </div>
+                <p class="critique-text">
+                    你坐在那里等待。三十秒，一分钟，两分钟。<br>
+                    你的时间被一个跳动的光标绑架了。
+                </p>
+            </div>
+
+            <p class="section-text">
+                1971 年，Ray Tomlinson 发出了人类历史上第一封电子邮件。<strong>SMTP (Simple Mail Transfer Protocol)</strong> 诞生。
+            </p>
+            <p class="section-text">
+                这不是一种过时的技术。这是一个被严重低估的 <em>"去中心化指令协议"</em>。
+            </p>
+
+            <div class="comparison">
+                <div class="comparison-card negative">
+                    <h3><span>×</span> Chat is for Humans</h3>
+                    <ul>
+                        <li>它是<strong>同步的</strong>——你必须在线等待</li>
+                        <li>它是<strong>情绪化的</strong>——碎片对话，上下文丢失</li>
+                        <li>它是<strong>碎片化的</strong>——一问一答，效率低下</li>
+                    </ul>
+                </div>
+                <div class="comparison-card positive">
+                    <h3><span>✓</span> Mail is for Agents</h3>
+                    <ul>
+                        <li>它是<strong>异步的</strong>——发出指令，去做别的事</li>
+                        <li>它是<strong>结构化的</strong>——主题、正文、附件</li>
+                        <li>它是<strong>任务导向的</strong>——交付成果，不是聊天</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="smtp-redefine">
+                <p class="old">Simple Mail Transfer Protocol</p>
+                <p class="new">Standard Model Transfer Protocol</p>
+                <p class="desc">
+                    我们正在复兴 SMTP 的荣光——将它重新定义为「标准模型传输协议」。
+                </p>
+            </div>
+
+            <p class="section-text" style="font-size: 1.2rem; text-align: center; margin-top: 60px;">
+                你发出指令，关上电脑，去生活。<br>
+                当你回来时，任务已经完成。<br><br>
+                <strong style="color: var(--color-highlight);">Agent 天然属于邮箱。</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- 02. The Orchestrator -->
+    <section class="section orchestrator">
+        <div class="container container--wide">
+            <p class="section-number">02</p>
+            <p class="section-label">The Orchestrator</p>
+            <h2 class="section-title">指挥官</h2>
+
+            <div class="orchestrator-intro">
+                <p class="section-text" style="font-size: 1.2rem;">
+                    Mailya 只是一个开始。<br>
+                    在未来，Mailya 将成为一个 <strong>接口 (Interface)</strong>，一个 <strong>中枢 (Hub)</strong>。
+                </p>
+                <span class="highlight-box">一封邮件，调动整个 AI 生态</span>
+            </div>
+
+            <div class="islands-critique">
+                <p><strong>现在的 AI 是孤岛。</strong></p>
+                <p>
+                    ChatGPT 懂通识，Gamma 懂排版，Sora 懂视频，Manus 懂研究。<br>
+                    你需要打开十个网页，在十个窗口间复制粘贴。
+                </p>
+                <div class="islands-grid">
+                    <span class="island-tag">ChatGPT</span>
+                    <span class="island-tag">Claude</span>
+                    <span class="island-tag">Gemini</span>
+                    <span class="island-tag">Gamma</span>
+                    <span class="island-tag">Sora</span>
+                    <span class="island-tag">Midjourney</span>
+                    <span class="island-tag">Manus</span>
+                    <span class="island-tag">Perplexity</span>
+                    <span class="island-tag">DeepSeek</span>
+                    <span class="island-tag">...</span>
+                </div>
+            </div>
+
+            <p class="section-text" style="font-size: 1.15rem; margin-bottom: 40px;">
+                <strong>未来的 Mailya，将是这些顶级大脑的指挥官。</strong>
+            </p>
+
+            <div class="email-demo">
+                <div class="email-header">
+                    <div class="dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <span class="title">New Message to mailya@mailya.asia</span>
+                </div>
+                <div class="email-content">
+                    <div class="email-meta">
+                        <strong>To:</strong> <span>mailya@mailya.asia</span><br>
+                        <strong>Subject:</strong> <span>SpaceX 研究报告</span>
+                    </div>
+                    <div class="email-body">
+                        <p class="subject">研究一下 SpaceX 的最新发射计划，写一份深度分析报告，配上数据可视化图表，再生成一个 30 秒的科普视频发给我。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow">
+                <p class="workflow-title">// Mailya 在后台自动拆解指令</p>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <span class="number">1</span>
+                        <span class="model">Perplexity</span>
+                        <span class="task">实时搜索 SpaceX 最新发射数据与新闻</span>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="number">2</span>
+                        <span class="model">GPT-5 Thinking</span>
+                        <span class="task">深度推理，生成研究框架与核心洞察</span>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="number">3</span>
+                        <span class="model">Manus</span>
+                        <span class="task">编写爬虫脚本，抓取历史发射数据</span>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="number">4</span>
+                        <span class="model">Claude</span>
+                        <span class="task">数据清洗，生成分析代码与图表</span>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="number">5</span>
+                        <span class="model">Gamma</span>
+                        <span class="task">生成专业级可视化 PPT 报告</span>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="number">6</span>
+                        <span class="model">Midjourney</span>
+                        <span class="task">生成封面与配图</span>
+                    </div>
+                    <div class="workflow-step">
+                        <span class="number">7</span>
+                        <span class="model">Sora</span>
+                        <span class="task">生成 30 秒科普视频</span>
+                    </div>
+                </div>
+
+                <div class="workflow-result">
+                    <p>所有复杂的 API 调用、模型切换、数据流转，都在邮件后台静默发生。</p>
+                    <p class="action">你只需要做一件事：收信。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 03. Not a Tool -->
+    <section class="section employee">
+        <div class="container container--wide">
+            <p class="section-number">03</p>
+            <p class="section-label">Not a Tool, An Employee</p>
+            <h2 class="section-title">不是工具，是员工</h2>
+
+            <div class="employee-header">
+                <p class="lead">
+                    我们不再向你兜售 <span class="strike">"效率工具 (Productivity Tools)"</span>。<br>
+                    SaaS 时代已经结束了。<br><br>
+                    我们向你交付的是 <em>"劳动力 (Workforce)"</em>。
+                </p>
+            </div>
+
+            <p class="section-text" style="font-size: 1.15rem;">
+                <strong>工具需要你拿在手里操作。</strong><br>
+                <strong>员工只需要你给出一个目标。</strong>
+            </p>
+
+            <div class="capabilities">
+                <div class="capability-card">
+                    <div class="icon">🔬</div>
+                    <h3>独立研究能力</h3>
+                    <p class="role">像分析师一样</p>
+                    <p>阅读 100 份财报，交叉验证数据，输出深度研究报告。不需要你逐页翻阅。</p>
+                </div>
+                <div class="capability-card">
+                    <div class="icon">⚡</div>
+                    <h3>自主行动能力</h3>
+                    <p class="role">像工程师一样</p>
+                    <p>去 GitHub 提交 PR，去数据库执行查询，去 API 拉取数据。真正的执行力。</p>
+                </div>
+                <div class="capability-card">
+                    <div class="icon">🔗</div>
+                    <h3>跨平台交付能力</h3>
+                    <p class="role">像秘书一样</p>
+                    <p>把结果推送到你的日历、Notion、Slack、飞书。无缝接入你的工作流。</p>
+                </div>
+            </div>
+
+            <div class="final-statement">
+                <p class="pre">从今天起，别再说你在 <span class="strike">用软件</span>。</p>
+                <p class="main">Say you are hiring.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="cta-content">
+            <p class="section-label">Start Hiring</p>
+            <h2 class="section-title">准备好雇佣你的第一个 AI 员工了吗？</h2>
+            <p class="cta-subtitle">
+                发一封邮件，交代任务，坐等成果。<br>
+                这就是未来的工作方式。
+            </p>
+            <a href="mailto:mailya@mailya.asia" class="cta-email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                mailya@mailya.asia
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            © 2025 Mailya · <a href="/">返回首页</a> · <a href="/terms.html">服务条款</a> · <a href="/privacy.html">隐私政策</a>
+        </p>
+    </footer>
+
+    <script>
+        // Smooth reveal on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.comparison-card, .capability-card, .workflow-step, .smtp-redefine, .final-statement').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
