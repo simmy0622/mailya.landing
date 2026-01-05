@@ -1092,7 +1092,10 @@
     <nav>
         <div class="container">
             <a href="#" class="logo">Mailya</a>
-            <a href="#pricing" class="nav-cta">查看定价</a>
+            <div style="display: flex; gap: 24px; align-items: center;">
+                <a href="/manifesto.html" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.875rem; transition: color 0.3s;" onmouseover="this.style.color='var(--color-highlight)'" onmouseout="this.style.color='var(--color-text-muted)'">宣言</a>
+                <a href="#pricing" class="nav-cta">查看定价</a>
+            </div>
         </div>
     </nav>
 
@@ -1342,12 +1345,12 @@
                     <p class="pricing-period">/ 月</p>
                     
                     <ul class="pricing-features">
-                        <li>更高使用额度</li>
+                        <li>更高使用额度（6倍于实习生）</li>
                         <li>直接读取 Word / PDF / Excel / 图片</li>
                         <li>直接输出 Word / PPT / Excel / PDF</li>
                         <li>联网实时搜索</li>
                         <li>对话记忆功能</li>
-                        <li>更强执行能力</li>
+                        <li>更强推理能力 (DeepSeek Reasoner)</li>
                     </ul>
                     
                     <button onclick="openPayModal()" class="btn btn--primary" style="width: 100%;">立即订阅</button>
@@ -1371,15 +1374,11 @@
                 <h3>订阅 Mailya</h3>
                 <p class="modal-subtitle">输入邮箱开始订阅</p>
                 
- <div class="form-group">
-    <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
-    <input type="email" id="payEmail" placeholder="your@email.com" required>
-    <p class="form-hint">
-        开通后，发邮件到 
-        <a href="mailto:mailya@mailya.asia" style="color: inherit; text-decoration: underline;">mailya@mailya.asia</a>
-        即可使用
-    </p>
-</div>
+                <div class="form-group">
+                    <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
+                    <input type="email" id="payEmail" placeholder="your@email.com" required>
+                    <p class="form-hint">开通后，发邮件到 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1bcb0b8bda8b091bcb0b8bda8b0ffb0a2b8b0">[email&#160;protected]</a> 即可使用</p>
+                </div>
                 
                 <div class="form-group">
                     <label for="payName">您的称呼</label>
@@ -1664,7 +1663,7 @@
                         🚀 升级正式员工 ¥40（推荐）
                     </button>
                     <p style="font-size: 0.75rem; color: var(--color-text-dim); text-align: center; margin-top: 0.5rem;">
-                        升级后立即享受 8 倍额度 + 更强大推理模型
+                        升级后立即享受 6 倍额度 + DeepSeek Reasoner 模型
                     </p>
                 `;
                 
