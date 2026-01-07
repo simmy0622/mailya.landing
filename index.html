@@ -1374,11 +1374,13 @@
                 <h3>订阅 Mailya</h3>
                 <p class="modal-subtitle">输入邮箱开始订阅</p>
                 
-                <div class="form-group">
-                    <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
-                    <input type="email" id="payEmail" placeholder="your@email.com" required>
-                    <p class="form-hint">开通后，发邮件到 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1bcb0b8bda8b091bcb0b8bda8b0ffb0a2b8b0">[email&#160;protected]</a> 即可使用</p>
-                </div>
+              <div class="form-group">
+    <label for="payEmail">邮箱地址 <span style="color: #dc2626;">*</span></label>
+    <input type="email" id="payEmail" placeholder="your@email.com" required>
+    <p class="form-hint">
+        开通后，发邮件到 <a href="mailto:mailya@mailya.asia">mailya@mailya.asia</a> 即可使用
+    </p>
+</div>
                 
                 <div class="form-group">
                     <label for="payName">您的称呼</label>
@@ -1456,18 +1458,20 @@
         </div>
     </div>
     
-    <!-- Success Toast (简单提示，备用) -->
-    <div id="successToast" class="toast" style="display: none;">
-        <div class="toast-content">
-            <span class="toast-icon">🎉</span>
-            <div class="toast-text">
-                <p class="toast-title">支付成功！</p>
-                <p class="toast-desc">您的订阅已开通，快给 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="335e525a5f4a52735e525a5f4a521d52405a52">[email&#160;protected]</a> 发邮件试试吧！</p>
-            </div>
-            <span class="toast-close" onclick="closeToast()">&times;</span>
+<div id="successToast" class="toast" style="display: none;">
+    <div class="toast-content">
+        <span class="toast-icon">🎉</span>
+        <div class="toast-text">
+            <p class="toast-title">支付成功！</p>
+            <p class="toast-desc">
+                您的订阅已开通，快给 
+                <a href="mailto:mailya@mailya.asia">mailya@mailya.asia</a>
+                发邮件试试吧！
+            </p>
         </div>
+        <span class="toast-close" onclick="closeToast()">&times;</span>
     </div>
-
+</div>
     <!-- Value Statement -->
     <section class="section">
         <div class="container">
