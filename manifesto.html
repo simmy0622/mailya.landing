@@ -390,52 +390,95 @@
         </div>
     </section>
 
-<section class="section employee">
+<section class="section employee future-section">
         <div class="container container--wide">
-            <p class="section-number">03</p>
-            <p class="section-label">Meta-Agent Architecture</p>
-            <h2 class="section-title">不止是工具。是基于 Meta-Agent 的数字员工。</h2>
+            <div class="section-header-group">
+                <p class="section-number">03</p>
+                <div class="section-tags">
+                    <span class="tag tag--roadmap">FUTURE ROADMAP</span>
+                </div>
+            </div>
+            
+            <p class="section-label">The Meta-Agent Architecture</p>
+            <h2 class="section-title">
+                未来的终极形态：<br>
+                基于 <span class="highlight">Meta-Agent</span> 的智能路由网络
+            </h2>
 
             <div class="employee-header">
                 <p class="lead">
-                    告别单一模型的局限。<br>
-                    Mailya 采用 <strong>"智能路由 (Smart Routing)"</strong> 架构。<br><br>
-                    它是你的 <em>"总包工头 (General Contractor)"</em>。<br>
-                    你只需下达指令，它自动调度全球最顶尖的算力资源为你交付结果。
+                    我们正在构建下一代执行架构。<br>
+                    告别单一模型的局限，Mailya 将进化为 <strong>"总包工头 (General Contractor)"</strong>。<br><br>
+                    你只需下达指令，系统自动路由全球最顶尖的模型为你交付结果。
                 </p>
             </div>
 
-            <p class="section-text" style="font-size: 1.15rem;">
-                <strong>Chatbot 需要你一步步引导。</strong><br>
-                <strong>Mailya 只需要你给一个结果定义。</strong>
-            </p>
-
             <div class="capabilities">
-                <div class="capability-card">
-                    <div class="icon">⚡</div> <h3>内环：原生极速执行</h3>
+                <div class="capability-card active-card">
+                    <div class="card-status status-live">● Live Now</div>
+                    <div class="icon">⚡</div>
+                    <h3>内环：原生极速执行</h3>
                     <p class="role">Powered by DeepSeek</p>
-                    <p>对于读财报、搜新闻、洗数据等日常任务，Mailya 调用<strong>DeepSeek v3.2</strong> 原生引擎。低成本、毫秒级响应，快速处理 80% 的繁琐工作。</p>
+                    <p>
+                        针对财报分析、数据清洗等高频任务，原生调用 <strong>DeepSeek v3.2 / R1</strong> 推理引擎。
+                        <br><br>
+                        以极低成本实现毫秒级响应，快速处理 80% 的日常工作流。
+                    </p>
                 </div>
                 
-                <div class="capability-card">
-                    <div class="icon">🧩</div> <h3>外环：专家能力调度</h3>
-                    <p class="role">API Orchestration</p>
-                    <p>对于代码开发、视频剪辑、复杂研究等重型任务，Mailya 自动链接 <strong>Claude / Replicate</strong> 等顶级垂类 API。它不是一个人在战斗，它背后是整个 AI 生态。</p>
+                <div class="capability-card future-card">
+                    <div class="card-status status-planning">○ In Roadmap</div>
+                    <div class="icon">🧩</div>
+                    <h3>外环：专家能力调度</h3>
+                    <p class="role">Powered by Claude & SOTA APIs</p>
+                    <p>
+                        针对工程级代码开发、视频剪辑等重型任务，智能调度 <strong>Claude 3.5 Sonnet</strong>、<strong>Runway</strong> 或 <strong>Midjourney</strong> 接口。
+                        <br><br>
+                        打破模型孤岛，让全球顶尖算力为你打工。
+                    </p>
                 </div>
 
                 <div class="capability-card">
-                    <div class="icon">📦</div> <h3>终极异步交付</h3>
+                    <div class="icon">📦</div>
+                    <h3>终极异步交付</h3>
                     <p class="role">Fire and Forget</p>
-                    <p>没有进度条，无需在线等待。你发送邮件 -> 关上电脑去生活 -> Mailya 搞定一切后，将<strong>完整的文件 (Artifacts)</strong> 发回你的收件箱。</p>
+                    <p>无论背后调度了多少个 Agent，最终都汇聚为一封邮件。<br>无需在线等待，Mailya 将<strong>完整的文件 (Artifacts)</strong> 直接发回你的收件箱。</p>
                 </div>
             </div>
 
             <div class="final-statement">
-                <p class="pre">我们不再兜售软件许可。</p>
-                <p class="main">We deliver Workforce.</p>
+                <p class="pre">从“使用工具”进化为</p>
+                <p class="main">"指挥工种"</p>
             </div>
         </div>
     </section>
+
+    <style>
+        .section-tags { display: inline-block; margin-left: 10px; vertical-align: middle; }
+        .tag--roadmap { 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            font-size: 0.7rem; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            letter-spacing: 1px;
+            color: #888;
+        }
+        .highlight { color: #fff; text-decoration: underline; text-decoration-color: #39FF14; }
+        
+        .card-status {
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .status-live { color: #39FF14; /* 荧光绿 */ }
+        .status-planning { color: #FFD700; /* 金色/黄色 */ opacity: 0.8; }
+        
+        /* 让未来卡片稍微暗一点，或者用虚线边框，体现正在建设中 */
+        .future-card { border: 1px dashed rgba(255,255,255,0.2); }
+    </style>
     <!-- CTA -->
     <section class="cta">
         <div class="cta-content">
